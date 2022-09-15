@@ -1,0 +1,7 @@
+difPy
+img2pdf
+pdf2image
+imagededup
+matplotlib==3.4.3
+tensorflow==2.7.1
+Pillow==6.2.2

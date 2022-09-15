@@ -1,0 +1,668 @@
+<div1 type="documentation">
+                <head>Documentation pour l'encodage du corpus</head>
+                <div2>
+                    <head>Introduction</head>
+                    <p>Ce guide d'encodage vise à préciser et expliciter les choix d'encodage mis en
+                        place pour l'édition du corpus des mazarinades réalisée par le projet
+                        ANTONOMAZ. Ce projet tend à rassembler et mettre à disposition un ensemble
+                        de documents appelés "mazarinades", parus en grande majorité pendant la
+                        Fronde (1648-1653) contre le cardinal Mazarin. Ces documents ont été repérés
+                        et définis comme "mazarinades" par Célestin Moreau (Bibliographie des
+                        Mazarinades), Emile Socard, Ernest Labadie et Hubert Carrier (Presses de la
+                        Fronde). L'objectif du projet est donc de récupérer numériquement ces
+                        documents mais également de permettre l'ajout de nouvelles sources pouvant
+                        être qualifiées de "mazarinade" dans ce corpus de plus de 5 000
+                        éléments.</p>
+                    <p>Les documents encodés sont issus de trois bibliothèques numériques : <list>
+                            <item>Mazarinum (Bibliothèque Mazarine)</item>
+                            <item>Gallica (Bibliothèque nationale de France)</item>
+                            <item>Google Books</item>
+                        </list></p>
+                    <p>La présente édition est composée des documents encodés en XML-TEI, d'un ODD
+                        en XML et en HTML, et d'un fichier RNG contenant le schéma de
+                        validation.</p>
+                </div2>
+                <div2>
+                    <head>Objectifs scientifiques de l'édition</head>
+                    <p>Cette édition en XML-TEI vise à produire des données interopérables pour
+                        valoriser le corpus des "mazarinades". Une attention particulière est portée
+                        à l'encodage des métadonnées contenues dans le <gi>teiHeader</gi> qui
+                        permettent de décrire la matérialité du document, de donner des indications
+                        bibliographiques mais également de souligner des désaccords de datation ou
+                        d'attribution entre les spécialistes à propos d'une production dont la
+                        grande partie est anonyme.</p>
+                    <p>L'encodage du <gi>text</gi> est actuellement plus sommaire. Le texte résulte
+                        d'une océrisation qui par la suite, pourrait être remplacée ou améliorée par
+                        une HTRisation effectuée avec eScriptorium.</p>
+                </div2>
+                <div2>
+                    <head>Structure du document XML</head>
+                    <p>Toute la structure est produite automatiquement à la génération du fichier.
+                        Elle n'a donc pas vocation à être modifié, ou très peu (ajouter un auteur ou
+                        un commentaire par exemple). Cependant, chaque fichier est relu afin
+                        d'apporter des informations supplémentaires, notamment dans les métadonnées,
+                        ce qui implique de restreindre les éléments par des règles de validation
+                        permettant de vérifier la conformité des informations saisies. L'imbrication
+                        des éléments ainsi que leur contenu sont présentés ci-dessous afin que les
+                        données saisies manuellement puissent être conformes à l'encodage général du
+                        corpus.</p>
+                    <p>L'entièreté du document XML est contenue dans la balise <gi>TEI</gi> qui
+                        forme l'élément racine. Ce dernier est divisé en deux sous-éléments : le
+                            <gi>teiHeader</gi> et le <gi>text</gi>.</p>
+                    <div3>
+                        <head>Le <gi>teiHeader</gi> et le nommage des fichiers</head>
+                        <p>Le <gi>teiHeader</gi> doit contenir un <att>xml:id</att> qui correspond
+                            au nom du fichier, attribuant alors un identifiant unique à chaque
+                            document de l'édition. Selon sa bibliothèque d'origine, un fichier peut
+                            ainsi être nommé ainsi: <list>
+                                <item>Moreau3316_GBOOKS</item>
+                                <item>Moreau3316_GALL</item>
+                                <item>Moreau3316_MAZ</item>
+                            </list> "Moreau" correspond à l'individu ayant identifié le document
+                            comme une mazarinade. On peut également trouver un fichier débutant par
+                            "Carrier", "Labadie" or "Socard". "3316" correspond au numéro attribué
+                            par le bibliographe (3316e de la liste). Si le document est un
+                            supplément Moreau, il se nomme ainsi : <code>Moreau1suppl12_GALL</code>,
+                            "1suppl" correspondant au premier supplément.</p>
+                    </div3>
+                    <div3>
+                        <head>Structure du <gi>teiHeader</gi></head>
+                        <p>Le <gi>teiHeader</gi> contient les métadonnées de l'édition. Il comprend
+                            quatre éléments-enfants : <list>
+                                <item>le <gi>fileDesc</gi> qui comporte des indications sur la
+                                    nature du document,</item>
+                                <item>le <gi>encodingDesc</gi> qui permet d'apporter des précisions
+                                    sur les choix d'encocage,</item>
+                                <item>le <gi>profileDesc</gi> qui apporte des informations diverses
+                                    sur le texte, qui ne font pas partie d'une description
+                                    bibliographique,</item>
+                                <item>le <gi>revisionDesc</gi> où sont indiqués les dates de
+                                    modifications effectuées sur le fichier.</item>
+                            </list></p>
+                        <div4>
+                            <head>Le <gi>fileDesc</gi></head>
+                            <p>Le <gi>fileDesc</gi> contient trois sous-éléments obligatoires : <list>
+                                    <item>Le <gi>titleStmt</gi> qui comporte des informations sur
+                                        l'encodage.</item>
+                                    <item>Le <gi>publicationStmt</gi> qui comporte des informations
+                                        sur le contexte de publication.</item>
+                                    <item>Le <gi>sourceDesc</gi> qui comporte une description de la
+                                        source.</item>
+                                </list></p>
+                            <div5>
+                                <head>Les éléments du <gi>titleStmt</gi></head>
+                                <p>Le <gi>titleStmt</gi> contient les informations sur le titre d'un
+                                    document et l'auteur de son contenu intellectuel. Il est composé
+                                    d'un premier élément <gi>title</gi> avec un attribut
+                                        <att>main</att> qui infique le titre de la mazarinade, et
+                                    d'un deuxième <gi>title</gi> avec un attribut <att>sub</att>
+                                    venant préciser que la mazarinade présentée est issue de
+                                    l'édition du projet ANTONOMAZ.</p>
+                                <p>Se trouve ensuite le <gi>respStmt</gi> qui indique les
+                                    différentes personnes étant intervenues dans la chaine de
+                                    traitement du fichier. Chaque personne est mentionnée dans un
+                                        <gi>persName</gi> et son <att>rôle</att> est précisé en
+                                    attribut. Un <att>ref</att> renvoyant vers un 'orcid' ou une
+                                    page individuelle peut être ajouté.</p>
+                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                    <title source="Moreau" type="main">Remontrance du clergé de
+                                        France faite au roi, la reine régente, sa mère, présente,
+                                        par révérend père en Dieu messire Gillebert de Choiseuil du
+                                        Plessy Praslain (sic), évèque de Comange (sic), assisté de
+                                        MM. les évêques et députés de l'assemblée générale.</title>
+                                    <title type="sub">Édition Antonomaz</title>
+                                    <respStmt>
+                                        <resp>Chaîne de traitement</resp>
+                                        <persName ref="orcid:0000-0001-9518-1040"
+                                            role="Project_manager">Abiven Karine</persName>
+                                        <persName ref="orcid:0000-0002-4795-2362"
+                                            role="Project_manager">Lejeune Gaël</persName>
+                                        <persName ref="orcid:0000-0002-0007-1664" role="OCRisation"
+                                            >Tanguy Jean-Baptiste</persName>
+                                        <persName ref="orcid:0000-0003-0850-8266" role="engineer"
+                                            >Bartz Alexandre</persName>
+                                        <persName ref="orcid:0000-0001-5815-9506" role="intern"
+                                            >Faure Margaux</persName>
+                                    </respStmt>
+                                </egXML>
+                            </div5>
+                            <div5>
+                                <head>Les éléments du <gi>publicationStmt</gi></head>
+                                <p>Les éléments renvoient à des informations sur la publication et
+                                    la diffusion du document. Le tout est rempli automatiquement à
+                                    la génération du fichier et n'a pas vocation à être modifié. Le
+                                        <gi>publisher</gi> mentionne le projet ANTONOMAZ comme
+                                    responsable de la présente édition et un <gi>ref</gi> renvoie
+                                    avec le <att>target</att>vers le github du projet où sont
+                                    notamment stockés les fichiers XML-TEI. La <gi>date</gi> de
+                                    création du fichier XML est ensuite indiquée et l'élément
+                                        <gi>licence</gi> contenu dans <gi>availability</gi> précise
+                                    la licence applicable pour la diffusion et la réutilisation du
+                                    travail. Nous sommes ici sur une licence libre sans utilisation
+                                    commerciale.</p>
+                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                    <publicationStmt>
+                                        <publisher>Projet ANTONOMAZ / Sorbonne
+                                            Université</publisher>
+                                        <ref target="https://github.com/Antonomaz"/>
+                                        <date type="file_creation" when="2021-11-02">2 novembre
+                                            2021</date>
+                                        <availability n="cc-by" status="restricted">
+                                            <licence
+                                                target="https://creativecommons.org/licenses/by/4.0"
+                                            />
+                                        </availability>
+                                    </publicationStmt>
+                                </egXML>
+                            </div5>
+                            <div5>
+                                <head>Les éléments du <gi>sourceDesc</gi></head>
+                                <p>Le <gi>sourceDesc</gi> considère la description de la source et
+                                    contient un <gi>bibl</gi> qui s'adapte à la description
+                                    bibliographique et un <gi>msDesc</gi> qui est l'élément le plus
+                                    approprié pour un document manuscrit.</p>
+                                <div6>
+                                    <head>Les éléments du <gi>bibl</gi></head>
+                                    <list>
+                                        <item>
+                                            <p>Le <gi>ref</gi></p>
+                                            <p>Il contient en un attribut <att>target</att> le lien
+                                                vers la numérisation originale du document. Le lien
+                                                renvoie donc soit vers une mazarinade hébergée sur
+                                                Gallica, Mazarinum ou Google Books.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <ref
+                                                  target="https://books.google.fr/books?id=nmWe8axzDPMC"
+                                                />
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>L'<gi>author</gi></p>
+                                            <p>L'<gi>author</gi> est l'élément où est indiqué le
+                                                responsable de l'écriture du texte. S'il y a
+                                                plusieurs auteurs, on remplit un élément
+                                                  <gi>author</gi> par auteur.</p>
+                                            <p>Il doit obligatoirement contenir un <gi>persName</gi>
+                                                ou un <gi>orgName</gi> selon si l'auteur est un
+                                                individu ou une institution (le parlement de Paris
+                                                par exemple). Si le prénom et/ou le nom de famille
+                                                sont indiqués, ils doivent respectivement être
+                                                placés dans un <gi>forename</gi> et
+                                                <gi>surname</gi>. Si l'auteur publie sous initiales
+                                                ou pseudonyme, cela se précise avec un
+                                                  <gi>addName</gi> dont la valeur est
+                                                  <val>pseudonyme</val> ou <val>initiales</val>. Si
+                                                l'on tombe sur un cas de figure tel que 'Louis XIV'
+                                                où il ne serait pas cohérent de créer une
+                                                distinction et plus évident de conserver le titre de
+                                                l'individu, la nomination est directement indiqué
+                                                dans le <gi>persName</gi>.<egXML
+                                                  xmlns="http://www.tei-c.org/ns/Examples"><author
+                                                  ref="viaf:34495750">
+                                                  <persName>
+                                                  <forename>Gilbert</forename>
+                                                  <surname>de Choiseul du Plessis-Praslain</surname>
+                                                  </persName>
+                                                  </author></egXML>
+                                                <egXML xmlns="http://www.tei-c.org/ns/Examples"
+                                                  ><author ref="isni:0000000383255772">
+                                                  <persName>Louis XIV</persName>
+                                                  </author></egXML></p>
+                                            <p>L'exemple ci-dessus illustre également la nécessité
+                                                d'apposer un identifiant lorsque l'auteur en possède
+                                                un. De préférence, il doit provenir d'un référentiel
+                                                ISNI (<ref target="https://isni.oclc.org/xslt/"
+                                                  >https://isni.oclc.org/xslt/</ref>). Si l'auteur
+                                                ne possède pas d'ISNI, il est également possible
+                                                d'ajouter un identifiant VIAF(<ref
+                                                  target="https://viaf.org">https://viaf.org</ref>),
+                                                  IDREF(<ref
+                                                  target="https://www.idref.fr/autorites.jsp"
+                                                  >https://www.idref.fr/autorites.jsp</ref>) ou BNF.
+                                                La valeur d'attribut doit alors commencer comme
+                                                suit: <list>
+                                                  <item>isni:</item>
+                                                  <item>viaf:</item>
+                                                  <item>idref:</item>
+                                                  <item>FRBNF:</item>
+                                                </list></p>
+                                            <p>Si l'auteur du texte n'est pas indiqué clairement sur
+                                                le document mais affirmé ou supposé par une tierce
+                                                personne, il faut indiquer la source de
+                                                l'information renseignée dans un attribut
+                                                  <att>source</att> qui peut notamment contenir les
+                                                valeurs : Antonomaz, Carrier, Moreau, Mazarine,
+                                                Artois, Labadie, Socard, BnF, BM_Lyon,
+                                                Bristih_Library. L'ajout de nouvelles valeurs est
+                                                accepté.</p>
+                                            <p>Enfin, il est possible d'ajouter des informations se
+                                                rapportant à l'assignation d'un individu comme
+                                                auteur du document dans un attribut <att>role</att>.
+                                                Si l'auteur est un auteur présumé, dont
+                                                l'attribution n'est pas certaine, on indique une
+                                                valeur <val>alleged_author</val>. Si l'attribution
+                                                de l'auteur est douteuse ou a longtemps été présumé
+                                                mais aujourd'hui remise en cause (par exemple,
+                                                Mézeray a longtemps été identifié avec certitude au
+                                                Sieur de Sandricourt mais c'est aujourd'hui
+                                                contesté), on indique <val>dubious_author</val>. Si
+                                                l'auteur indiqué sur le document est un faux
+                                                locuteur et fait office de marionnette pour servir
+                                                le discours, on ajoute un <val>speaker</val>. Par
+                                                exemple, dans le Moreau1558 ayant pour titre
+                                                "Harangue (la) du Courrier extraordinaire envoyée
+                                                (sic) par notre Saint-Père le Pape à la reine
+                                                régente.", le pape est un locuteur-marionnette. On
+                                                indique alors : <egXML
+                                                  xmlns="http://www.tei-c.org/ns/Examples">
+                                                  <author role="speaker">
+                                                  <persName>Innocent X</persName>
+                                                  </author></egXML>
+                                            </p>
+                                            <p>Si l'auteur est complètement anonyme, il convient de
+                                                rendre la balise <gi>author</gi> auto-fermante.</p>
+                                        </item>
+                                        <item>
+                                            <p>Le <gi>title</gi></p>
+                                            <p>L'élément reprend le titre de la mazarinade.</p>
+                                        </item>
+                                        <item>
+                                            <p>Le <gi>pubPlace</gi></p>
+                                            <p>Il indique le lieu d'édition. Dans notre cas, c'est
+                                                une ville qui doit être indiquée ou la mention de
+                                                'Sans Lieu' si elle n'est pas connue. Un référentiel
+                                                  <ref target="https://www.geonames.org"
+                                                  >geonames</ref> doit être précisé dans un
+                                                  <att>ref</att> débutant par 'geonames:' suivi de
+                                                l'identifiant. Un attribut <att>source</att> précise
+                                                d'où provient l'information.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <pubPlace ref="geonames:2988507" source="Moreau"
+                                                  >Paris</pubPlace>
+                                            </egXML>
+                                            <p>Dans la grande majorité des cas, cette information
+                                                est remplie automatiquement à partir de la
+                                                bibliographie Moreau mais il arrive quelques fois
+                                                qu'elle soit erronnée et donc à modifier.</p>
+                                        </item>
+                                        <item>
+                                            <p>Le <gi>publisher</gi></p>
+                                            <p>Il contient le nom de l'imprimeur de la mazarinade.
+                                                Comme pour l'auteur, il possède un <att>ref</att>
+                                                lorsqu'il possède un identifiant ISNI, VIAF ou BNF.
+                                                Un <val>source</val> peut également être ajouté si
+                                                une institution ou un individu identifie l'imprimeur
+                                                du document. Les faux noms d'imprimeurs sont
+                                                indiqués par un attribut <att>role</att> dont la
+                                                valeur est <val>dubious</val>. Enfin, un
+                                                  <att>xml:id</att> permet de lier l'imprimeur à sa
+                                                notice XML-TEI qui contient des informations sur
+                                                l'individu et son entreprise.</p>
+                                            <p>L'élément enfant <gi>persName</gi> contient le
+                                                  <gi>forename</gi> et le <gi>surname</gi> indiquant
+                                                le prénom et le nom. Pour les cas de veuves
+                                                imprimeuses, on considère le "veuve de ..." comme le
+                                                  <gi>forename</gi> (voir exemple). On peut
+                                                également trouver un <gi>orgName</gi> qui contient
+                                                directement le texte.</p>
+                                            <p>Si l'imprimeur mentionné sur le document est un faux
+                                                nom d'imprimeur, on ajoute un <att>role</att> ayant
+                                                pour valeur <val>dubious</val>.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <publisher ref="isni:0000000109189477" xml:id="IL_VitréAntoine.xml">
+                                                  <persName>
+                                                  <forename>Antoine</forename>
+                                                  <surname>Vitré</surname>
+                                                  </persName>
+                                                </publisher>
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <publisher ref="isni:0000000002569584" xml:id="IL_RémyVeuvedeJean.xml">
+                                                  <persName>
+                                                  <forename>Veuve de Jean</forename>
+                                                  <surname>Rémy</surname>
+                                                  </persName>
+                                                </publisher>
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <publisher>
+                                                  <persName>Sans Nom</persName>
+                                                </publisher>
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <publisher>
+                                                  <orgName>Les imprimeurs du roi</orgName>
+                                                </publisher>
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>La <gi>date</gi></p>
+                                            <p>Un élément <gi>date</gi> est rempli automatiquement à
+                                                partir de la bibliographie Moreau et contient soit
+                                                une année soit une mention 'Sans Date'. Il est
+                                                possible d'ajouter un nouvel élément si une
+                                                précision peut être apportée ou si la date proposée
+                                                par Moreau est erronée. Carrier apporte souvent ces
+                                                précisions de datation, celles-ci sont indiqués sur
+                                                les notices de la bibliothèque Mazarine.</p>
+                                            <p>Si la date indiquée est précise, on met un attribut
+                                                  <att>when</att>. Si l'on possède une intervalle,
+                                                on encadre avec un <att>notBefore</att> et
+                                                  <att>notAfter</att>. On peut également seulement
+                                                mettre l'un ou l'autre de ces attributs pour
+                                                indiquer que le document est paru avant ou après tel
+                                                jours ou mois.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <date source="Moreau" when="1651">1651</date>
+                                                <date source="Antonomaz" notBefore="1651-04-26"
+                                                  >permission d'imprimer en date du 26 avril
+                                                  1651</date>
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <date source="Carrier" notBefore="1649-04-15"
+                                                  notAfter="1649-04-30">deuxième quinzaine
+                                                  d'avril</date>
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>Le <gi>extent</gi></p>
+                                            <p>Il contient un élément <gi>measure</gi> dont
+                                                l'attribut <att>quantity</att> contient le nombre de
+                                                pages et <att>unit</att> indique l'unité de mesure
+                                                (en page). Il est rempli automatiquement à partir du
+                                                travail de Moreau (il faut vérifier tout de même la
+                                                correspondance de l'information avec le document
+                                                encodé : une édition différente de celle traitée par
+                                                Moreau peut comporter un nombre de pages différent
+                                                par exemple).</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <extent>
+                                                  <measure quantity="22" unit="page"/>
+                                                </extent>
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>La <gi>note</gi></p>
+                                            <p>Avec un attribut <att>format</att>, elle permet de
+                                                renseigner le format de la mazarinade, le plus
+                                                souvent en in-4. S'il est inconnu, on indique
+                                                'Inconnu.'</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <note type="format">in-4</note>
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>Le <gi>relatedItem</gi></p>
+                                            <p>Cet élément permet d'indiquer un objet bibliograhique
+                                                qui est lié au document actuellement décrit. Il a
+                                                donc été choisi pour mentionner l'existence ou non
+                                                d'une notice descriptive publiée par la Bibliothèque
+                                                Mazarine, riche en description bibliographique.</p>
+                                            <p>Afin de renseigner cette notice, l'élement contient
+                                                donc un <att>source</att> qui renvoie à 'Mazarine',
+                                                un <att>type</att> ayant pour valeur
+                                                  <val>identifier</val>. Un <att>subtype</att>
+                                                précise l'identifiant attribué par la Bibliothèque.
+                                                S'il n'existe pas de notice pour la mazarinade, il
+                                                contient la valeur 'none', sinon il contient
+                                                l'identifiant. Un attribut <att>cert</att> indique
+                                                ensuite la certitude de correspondance entre
+                                                l'exemplaire encodé et celui conservé à la Mazarine.
+                                                Il indique 'high' si ce sont les mêmes éditions, si
+                                                cela est moins certain ou qu'il n'existe pas de
+                                                notice Mazarine, il indique 'low'. Enfin, le lien
+                                                vers la notice est contenu dans le
+                                                <att>target</att>, sinon il comporte 'none'. Cet
+                                                élément est obligatoire, même sans notice, puisque
+                                                la Mazarine continue d'ajouter de nouvelles notices
+                                                qui seront donc à relier à cet endroit.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <!-- avec notice -->
+                                                <relatedItem source="Mazarine" type="identifier"
+                                                  subtype="BM01662" cert="high"
+                                                  target="https://mazarinades.bibliotheque-mazarine.fr/ark:/61562/bm50557"
+                                                />
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <!-- sans notice -->
+                                                <relatedItem source="Mazarine" type="identifier"
+                                                  subtype="none" cert="low" target="none"/>
+                                            </egXML>
+                                        </item>
+                                    </list>
+                                </div6>
+                                <div6>
+                                    <head>Les éléments du <gi>msDesc</gi></head>
+                                    <list>
+                                        <item>
+                                            <p>Le <gi>msIdentifier</gi></p>
+                                            <p>Cet élément contient les informations permettant
+                                                d'identifier le document. La ville et l'institution
+                                                conservant le manuscrit sont respectivement
+                                                précisées par <gi>settlement</gi> (dont l'attribut
+                                                  <att>ref</att> renvoie au 'geonames'
+                                                correspondant) et <gi>institution</gi>. Le
+                                                  <gi>repository</gi> permet d'identifier le dépôt
+                                                par le fonds ou la série dans lequel est conservé le
+                                                document. La balise <gi>idno</gi> renvoie à la cote
+                                                de l'exemplaire qui s'indique par un attribut
+                                                  <att>type</att> ayant pour valeur
+                                                <val>cote</val>.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <msIdentifier>
+                                                  <settlement ref="geonames:2996944"
+                                                  >Lyon</settlement>
+                                                  <institution>Bibliothèque municipale</institution>
+                                                  <repository/>
+                                                  <idno type="cote">312735</idno>
+                                                </msIdentifier>
+                                            </egXML>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <msIdentifier>
+                                                  <settlement ref="geonames:2988507"
+                                                  >Paris</settlement>
+                                                  <institution>Bibliothèque nationale de
+                                                  France</institution>
+                                                  <repository>Département Littérature et
+                                                  art</repository>
+                                                  <idno type="cote">YE-2556</idno>
+                                                </msIdentifier>
+                                            </egXML>
+                                        </item>
+                                        <item>
+                                            <p>L'élément <gi>history</gi></p>
+                                            <p>Cette dernière partie du <gi>msDesc</gi> apporte des
+                                                informations de conservation du document. Dans
+                                                l'élément <gi>provenance</gi>, un élément
+                                                  <gi>stamp</gi> permet d'indiquer toute estampille
+                                                d'archivage apposée sur le papier. La présence ou
+                                                non d'une estampille est signifiée par un texte
+                                                'True' ou 'False'. Cette précision pourrait, par la
+                                                suite, permettre une étude sur l'historique de
+                                                conservation et notamment sur les périodes
+                                                d'acquisition des exemplaires présents dans le
+                                                corpus du projet.</p>
+                                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <history>
+                                                  <provenance>
+                                                  <stamp>True</stamp>
+                                                  </provenance>
+                                                </history>
+                                            </egXML>
+                                        </item>
+                                    </list>
+                                </div6>
+                            </div5>
+                        </div4>
+                        <div4>
+                            <head>Le <gi>encodingDesc</gi></head>
+                            <p>Cet élément contenant un <gi>projectDesc</gi> vient présenter
+                                l'objectif du projet ANTONOMAZ dans le cadre duquel a été crée le
+                                fichier XML-TEI. Il donne également quelques informations sur le
+                                processus de récupération des documents et des textes.</p>
+                            <p>Un <gi>editorialDecl</gi> pourrait venir préciser les choix
+                                d'encodage, notamment le rapport entre ceux-ci et la numérisation.
+                                Il serait plutôt bref étant donné que les choix de balisage sont
+                                détaillés dans cette documentation.</p>
+                        </div4>
+                        <div4>
+                            <head>Le <gi>profileDesc</gi></head>
+                            <p>Ce troisième grand élément du <gi>teiHeader</gi> permet d'ajouter des
+                                métadonnées de type non bibliographique du texte.</p>
+                            <div5>
+                                <head>Le <gi>langUsage</gi></head>
+                                <p>Il précise la langue dans laquelle la source est écrite. Il est
+                                    la plupart du temps en français mais on peut trouver des textes
+                                    rédigés en latin, en occitan, en allemand, en italien ou encore
+                                    en méérlandais.</p>
+                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                    <langUsage>
+                                        <language ident="fra">Document en français</language>
+                                    </langUsage>
+                                </egXML>
+                            </div5>
+                            <div5>
+                                <head>Le <gi>abstract</gi></head>
+                                <p>Dans cet élément, il est possible d'ajouter des commentaires ou
+                                    notes provenant des bibliothèques, bibliographes ou de l'équipe
+                                    du projet. Il faut alors ajouter une balise <gi>p</gi> pour
+                                    chaque auteur d'un commentaire en indiquant la
+                                    <att>source</att>. Les commentaires <val>Moreau</val> sont
+                                    ajoutés par défaut et peuvent servir d'aide pour la correction
+                                    des métadonnées. Actuellement, ils n'ont pas valeur à être
+                                    publié sur le site web (océrisation bruitée, commentaire parfois
+                                    réduit à une citation bibliographique qu'il n'est pas pertinent
+                                    d'afficher). Si la mazarinade possède une notice à la
+                                    Bibliothèque Mazarine, elle contient fréquemment une 'note sur
+                                    le texte ou l'édition' à ajouter dans cet élément.</p>
+                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                    <abstract>
+                                        <p source="Mazarine">Deux états de la p. de titre : état A,
+                                            terminé par "Parlement de Normandie" ; état B, terminé
+                                            par "Parlement de Normandie, à S. Germain en Laye".</p>
+                                        <p source="Moreau">3002. Récit véritable de ce qui fut dit à
+                                            l'arrivée de messieurs les députés du Parlement de
+                                            Normandie (à Ruel). Paris, Jean Dédin, 1649, 7
+                                            pages.</p>
+                                        <p source="Antonomaz">La page de titre est manquante dans la
+                                            numérisation.</p>
+                                    </abstract>
+                                </egXML>
+                            </div5>
+                            <div5>
+                                <head>Le <gi>textClass</gi></head>
+                                <p>Cet élément contient un <gi>keywords</gi> avec plusieurs éléments
+                                    enfants <gi>term</gi> contenant des informations sur le genre du
+                                    texte, les thèmes abordés et la mention de distinctions
+                                    particulières.</p>
+                                <p>Chacun a un un attribut <att>type</att> qui précise l'information
+                                    contenue : <list>
+                                        <item>un premier <att>type</att> contient la valeur
+                                                <val>form</val> qui indique la forme littéraire du
+                                            texte : prose, vers, vers/prose.</item>
+                                        <item>Le <val>genre</val> peut ensuite être précisé s'il est
+                                            identifié, sinon il est indiqué comme 'non renseigné'.
+                                            Une liste des genres, réalisée par Karine Abiven, est
+                                            disponible dans le manuel d'encodage. </item>
+                                        <item>Le <val>subgenre</val> peut ensuite être ajouté,
+                                            toujours à partir des formes définies dans le manuel. Si
+                                            l'élément est vide, il peut être supprimé. On peut
+                                            trouver deux <gi>term</gi> précisant le
+                                            sous-genre.</item>
+                                        <item>Le <gi>term</gi> avec un <val>subject</val> permet
+                                            d'indiquer des mots-clefs sur la thématique du document.
+                                            Les notices de la Bibliothèque Mazarine en indiquent
+                                            souvent et il est possible de les reporter. On ajoute un
+                                            élément <gi>term</gi> par mot-clef. S'il n'a pas de
+                                            mot-clef, on peut supprimer l'élément vide ajouté
+                                            automatiquement.</item>
+                                        <item>Le <val>handwritten_note</val> indique la présence ou
+                                            non d'un ajout manuscrit sur le document. Par défaut le
+                                                <att>subtype</att> contient la valeur 'no' mais elle
+                                            est à modifier en 'yes' si une trace manuscrite (hors
+                                            système de cotation) est visible sur
+                                            l'exemplaire.</item>
+                                        <item>Avec le même fonctionnement, le
+                                                <val>table_of_content</val> précise l'existence
+                                            d'une table des matières.</item>
+                                        <item>Pareillement, le <val>illustration</val> précise
+                                            l'existence d'un portrait ou de tout type d'illustration
+                                            (hors marque d'imprimeur).</item>
+                                    </list></p>
+                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                    <textClass>
+                                        <keywords>
+                                            <term type="form">prose</term>
+                                            <term type="genre">Récit</term>
+                                            <term type="subject">Parlement de Normandie</term>
+                                            <term type="subject">Louis XIV</term>
+                                            <term type="handwritten_note" subtype="no"/>
+                                            <term type="table_of_content" subtype="no"/>
+                                            <term type="illustration" subtype="no"/>
+                                        </keywords>
+                                    </textClass>
+                                </egXML>
+                            </div5>
+                        </div4>
+                        <div4>
+                            <head>Les éléments du <gi>revisionDesc</gi></head>
+                            <p>Chaque modification importante est indiquée dans un élement
+                                    <gi>change</gi>. Par défaut le <att>status</att> a pour valeur
+                                    <val>not_corrected</val> et doit être modifié en
+                                    <val>corrected</val>. La date de modification est précisée par
+                                l'attribut <att>when</att> et l'auteur par <att>who</att>. </p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                <revisionDesc>
+                                    <change status="corrected" when="2022-07-18" who="MF"/>
+                                </revisionDesc>
+                            </egXML>
+                        </div4>
+                    </div3>
+                    <div3>
+                        <head>Structure du texte</head>
+                        <p>L'élément <gi>text</gi> est l'autre grand composant du fichier XML-TEI,
+                            il comprend le contenu du document, c'est-à-dire le corps du texte
+                            englobé dans un <gi>body</gi>.</p>
+                        <p>Au sein du <gi>body</gi>, l'ensemble du texte océrisé est placé dans un
+                            élément <gi>p</gi>. Chaque début de page est marqué par une balise
+                                auto-fermante<gi>pb</gi> dont la numérotation est indiqué dans un
+                            attribut <att>n</att>. Chaque début de ligne se marque par un élément
+                                <gi>lb</gi>. Si le texte est en vers, chaque ligne est englobée dans
+                            un élément <gi>l</gi>.</p>
+                        <p>Les marques d'imprimeurs sont mentionnées par un <gi>figure</gi> avec un
+                            attribut <att>type</att> de valeur 'decoration'. Si c'est une
+                            illustration (comme un portrait), il prend la valeur
+                                <val>illustration</val>. Les privilèges d'impression sont balisés par
+                            un élément <gi>imprimatur</gi> qui n'est pas un élément TEI.</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                            <!-- texte en prose -->
+                            <body>
+                                <p>
+                                    <pb n="1"/>
+                                    <lb/>RECIT <lb/>VERITABLE <lb/>DE CEQVI FVT DICT <lb/>A
+                                    L’ARRIVEE <lb/>DE <lb/>MESSIEVRS <lb/>LES DEPVTEZ DV
+                                    <lb/>Parlement de Normandie. <figure type="decoration"/>
+                                    <lb/>A PARIS, <lb/>Chez I. DEDIN, ruë Sainct Iean de Beauvais.
+                                    <lb/>M. DC. XLIX. <pb n="2"/>
+                                    <!-- page blanche entre la page de titre et le début du texte, à ne pas supprimer -->
+                                    <pb n="3"/>
+                                    <lb/>RECIT VERITABLE <lb/>DE CE QVI FVT DICT <lb/>A L’ARRIVEE
+                                    <lb/>DE <lb/>MESSIEVRS <lb/>LES DEPVTEZ DV <lb/>Parlement de
+                                    Normandie. <!-- suite du texte -->
+                                </p>
+                            </body>
+                        </egXML>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                            <!-- texte en vers -->
+                            <l>
+                                <lb/>TRes fine pele de voſtre-Ordre,</l>
+                            <l>
+                                <lb/> l ni saluan nloei nmrdi</l>
+                            <l>
+                                <lb/>lais dont la ſublime vetu’:</l>
+                            <l>
+                                <lb/>le ien i ſe pieds ahouanu.</l>
+                        </egXML>
+                    </div3>
+                </div2>
+            </div1>

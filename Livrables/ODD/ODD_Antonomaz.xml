@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_odds.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_odds.rng"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>ODD ANTONOMAZ</title>
+                <author>
+                    <name>Camille Roblin</name>
+                </author>
+                <author>
+                    <name>Alexandre Bartz</name>
+                    <idno type="ORCID" n="0000-0003-0850-8266"/>
+                </author>
+                <author>
+                    <name>Margaux Faure</name>
+                    <idno type="ORCID" n="0000-0001-5815-9506"/>
+                </author>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Projet ANTONOMAZ / Sorbonne Université</publisher>
+                <availability status="restricted" n="cc-by">
+                    <licence target="https://creativecommons.org/licenses/by/4.0"/>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Créé en <date when="2021-04">avril 2021</date> par <name>Camille
+                    Roblin</name></p>
+            </sourceDesc>
+        </fileDesc>
+        <revisionDesc>
+            <change when="2021-05-25" who="orcid:0000-0003-0850-8266">Reprise du travail de
+                    <name>Camille Roblin</name>, ajout de contraintes schematron.</change>
+            <change when="2021-09-06" who="orcid:0000-0003-0850-8266">Ajout d'un
+                    <gi>settingDesc</gi> pour encoder les évènements auxquels font référence les
+                mazarinades (un <gi>setting</gi> par évènement).</change>
+            <change when="2021-11-05" who="orcid:0000-0003-0850-8266">Ajout de <gi>imprimatur</gi>
+                pour encoder les autorisations d'impression.</change>
+            <change when="2022-03-09" who="orcid:0000-0003-0850-8266">Reprise de l'ODD : ajout de
+                valeurs d'attributs, corrections d'erreurs.</change>
+            <change when="2022-04-08" who="orcid:0000-0001-5815-9506">Reprise de l'ODD : restriction
+                des attributs pour <gi>date</gi>, <gi>author</gi> et <gi>publisher</gi>, ajout du
+                    <gi>addName</gi>, ajout de contraintes schematron.</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <xi:include href="documentation.xml"/>
+            <div1 type="schemas">
+                <head>Les éléments du schéma</head>
+                <schemaSpec ident="ANTONOMAZ" start="TEI" prefix="tei_">
+                    <moduleRef key="tei"/>
+                    <moduleRef key="header"
+                        include="abstract availability change editorialDecl encodingDesc extent fileDesc idno 
+                        keywords language langUsage licence profileDesc projectDesc publicationStmt revisionDesc sourceDesc 
+                        teiHeader textClass titleStmt"/>
+                    <moduleRef key="textstructure" include="body TEI text imprimatur"/>
+                    <moduleRef key="core"
+                        include="author bibl biblStruct cb choice corr date editor foreign gap head hi imprint l lb lg measure monogr 
+                        note p pb publisher pubPlace ref relatedItem resp respStmt sic term title unclear"/>
+                    <moduleRef key="msdescription"
+                        include="history institution msDesc msIdentifier provenance repository stamp"/>
+                    <moduleRef key="transcr" include="fw space"/>
+                    <moduleRef key="figures" include="figure"/>
+                    <moduleRef key="namesdates"
+                        include="affiliation forename orgName persName roleName settlement surname addName"/>
+                    <moduleRef key="corpus" include="setting settingDesc"/>
+
+                    <!-- Règles d'encodage à appliquer au corpus -->
+                    <elementSpec ident="TEI" mode="change">
+                        <constraintSpec ident="xmlid" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:TEI">
+                                    <sch:let name="fileName"
+                                        value="tokenize(document-uri(/), '/')[last()]"/>
+                                    <sch:assert
+                                        test="string(@xml:id) = substring-before($fileName, '.xml')"
+                                        role="error">L'identifiant du document et le nom du fichier
+                                        doivent être les mêmes. Actuellement @xml:id est
+                                            "<sch:value-of select="@xml:id"/>" alors que le nom du
+                                        fichier est "<sch:value-of select="$fileName"/>"
+                                    </sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="xml:id" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+
+                    <!-- Règles concernant le header -->
+                    <elementSpec ident="fileDesc" mode="change">
+                        <content>
+                            <elementRef key="titleStmt"/>
+                            <elementRef key="publicationStmt"/>
+                            <elementRef key="sourceDesc"/>
+                        </content>
+                    </elementSpec>
+
+                    <!-- titleStmt -->
+                    <elementSpec ident="titleStmt" mode="change">
+                        <content>
+                            <elementRef key="title" minOccurs="2" maxOccurs="2"/>
+                            <elementRef key="respStmt"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="title" mode="change">
+                        <constraintSpec ident="titleType" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:titleStmt/tei:title">
+                                    <sch:assert test="@type" role="error">Ajouter un attribut @type
+                                        (valeur 'main' ou 'sub') </sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="guillemet" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:titleStmt/tei:title">
+                                    <sch:assert test="not(./starts-with(., '&quot;'))" role="error"
+                                        >Le titre ne peut commencer par un guillement</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="editionType" scheme="schematron">
+                            <constraint>
+                                <sch:rule
+                                    context="tei:titleStmt/tei:title/@type[contains(., 'sub')]">
+                                    <sch:assert test="../contains(.,'Édition Antonomaz')"
+                                        role="error">Le texte doit être "Édition
+                                        Antonomaz"</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="type" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="main"/>
+                                    <valItem ident="sub"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="source" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="Moreau"/>
+                                    <valItem ident="Mazarine"/>
+                                    <valItem ident="Socard"/>
+                                    <valItem ident="Labadie"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="respStmt" mode="change">
+                        <content>
+                            <elementRef key="resp"/>
+                            <elementRef key="persName" minOccurs="1" maxOccurs="unbounded"/>
+                        </content>
+                    </elementSpec>
+
+                    <!-- publicationStmt -->
+                    <elementSpec ident="publicationStmt" mode="change">
+                        <content>
+                            <elementRef key="publisher" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="ref" minOccurs="1" maxOccurs="1"/>
+                            <elementRef key="date" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="availability"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="date" mode="change">
+                        <constraintSpec ident="type" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:sourceDesc/tei:bibl/tei:date">
+                                    <sch:report test="@type" role="error">La date de l'impression ne
+                                        peut contenir l'attribut type.</sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="texte" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:bibl/tei:date">
+                                    <sch:assert test="./text()"> La date doit également être
+                                        indiquée en contenu. La balise ne peut pas être
+                                        auto-fermante. </sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="ref" scheme="schematron">
+                            <constraint>
+                                <sch:rule
+                                    context="tei:bibl//tei:date[text()[not(matches(., 'Sans Date'))]]">
+                                    <sch:assert test="@when | @notBefore | @notAfter" role="error"
+                                        >La date doit être indiquée en attribut soit par un @when,
+                                        soit par un @notBefore et/ou @notAfter.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="source" mode="change" usage="rec">
+                                <valList mode="change" type="closed">
+                                    <valItem ident="Moreau"/>
+                                    <valItem ident="BnF"/>
+                                    <valItem ident="Mazarine"/>
+                                    <valItem ident="Carrier"/>
+                                    <valItem ident="Antonomaz"/>
+                                    <valItem ident="Artois"/>
+                                    <valItem ident="BM_Lyon"/>
+                                    <valItem ident="Labadie"/>
+                                    <valItem ident="Socard"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="atLeast" mode="delete"/>
+                            <attDef ident="atMost" mode="delete"/>
+                            <attDef ident="calendar" mode="delete"/>
+                            <attDef ident="cert" mode="delete"/>
+                            <attDef ident="change" mode="delete"/>
+                            <attDef ident="confidence" mode="delete"/>
+                            <attDef ident="datingMethod" mode="delete"/>
+                            <attDef ident="datingPoint" mode="delete"/>
+                            <attDef ident="evidence" mode="delete"/>
+                            <attDef ident="extent" mode="delete"/>
+                            <attDef ident="facs" mode="delete"/>
+                            <attDef ident="from" mode="delete"/>
+                            <attDef ident="from-custom" mode="delete"/>
+                            <attDef ident="from-iso" mode="delete"/>
+                            <!--<attDef ident="instant" mode="delete"/>-->
+                            <!-- l'ODD crée des erreurs de validation dans le XML si je le passe en delete -->
+                            <attDef ident="key" mode="delete"/>
+                            <attDef ident="max" mode="delete"/>
+                            <attDef ident="min" mode="delete"/>
+                            <attDef ident="n" mode="delete"/>
+                            <attDef ident="notAfter-custom" mode="delete"/>
+                            <attDef ident="notAfter-iso" mode="delete"/>
+                            <attDef ident="notBefore-custom" mode="delete"/>
+                            <attDef ident="notBefore-iso" mode="delete"/>
+                            <attDef ident="period" mode="delete"/>
+                            <attDef ident="precision" mode="delete"/>
+                            <attDef ident="quantity" mode="delete"/>
+                            <attDef ident="ref" mode="delete"/>
+                            <attDef ident="rend" mode="delete"/>
+                            <attDef ident="rendition" mode="delete"/>
+                            <attDef ident="resp" mode="delete"/>
+                            <attDef ident="scope" mode="delete"/>
+                            <attDef ident="style" mode="delete"/>
+                            <attDef ident="subtype" mode="delete"/>
+                            <attDef ident="to" mode="delete"/>
+                            <attDef ident="to-custom" mode="delete"/>
+                            <attDef ident="to-iso" mode="delete"/>
+                            <attDef ident="unit" mode="delete"/>
+                            <attDef ident="when-custom" mode="delete"/>
+                            <attDef ident="when-iso" mode="delete"/>
+                            <attDef ident="xml:base" mode="delete"/>
+                            <attDef ident="xml:id" mode="delete"/>
+                            <attDef ident="xml:lang" mode="delete"/>
+                            <attDef ident="xml:space" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="availability" mode="change">
+                        <attList>
+                            <attDef ident="status" mode="change" usage="req"/>
+                            <attDef ident="n" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="licence" mode="change">
+                        <attList>
+                            <attDef ident="target" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+
+                    <!-- sourceDesc -->
+                    <elementSpec ident="sourceDesc" mode="change">
+                        <content>
+                            <elementRef key="bibl"/>
+                            <elementRef key="msDesc"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="bibl" mode="change">
+                        <content>
+                            <elementRef key="ref" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="author" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="persName" minOccurs="0" maxOccurs="unbounded"/>
+                            <elementRef key="editor" minOccurs="0" maxOccurs="unbounded"/>
+                            <elementRef key="title" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="pubPlace" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="publisher" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="date" minOccurs="1" maxOccurs="unbounded"/>
+                            <elementRef key="extent" minOccurs="1" maxOccurs="1"/>
+                            <elementRef key="note" minOccurs="1" maxOccurs="1"/>
+                            <elementRef key="relatedItem" minOccurs="1"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="ref" mode="change">
+                        <attList>
+                            <attDef ident="target" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="author" mode="change">
+                        <constraintSpec ident="ref" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:author[@ref]">
+                                    <sch:assert
+                                        test="./@ref/starts-with(.,'isni:') or ./@ref/starts-with(.,'viaf:') or ./@ref/starts-with(.,'FRBNF:') or ./@ref/starts-with(.,'idref:')"
+                                        role="error">Ajouter un identifiant valide.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="authorDescendants" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:author//*">
+                                    <sch:assert test=".[text()[normalize-space()]] | descendant::*"
+                                        >Si l'auteur est inconnu, la balise author doit être
+                                        auto-fermante.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="authorContent" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:author">
+                                    <sch:assert test=".[not(text()[normalize-space()])]"
+                                        role="error">L'auteur doit être renseigné dans un élément
+                                        persName ou orgName.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="ref" mode="change" usage="rec"/>
+                            <attDef ident="source" mode="change" usage="rec">
+                                <valList mode="add" type="semi">
+                                    <valItem ident="Carrier"/>
+                                    <valItem ident="Moreau"/>
+                                    <valItem ident="Mazarine"/>
+                                    <valItem ident="Artois"/>
+                                    <valItem ident="Labadie"/>
+                                    <valItem ident="Socard"/>
+                                    <valItem ident="Antonomaz"/>
+                                    <valItem ident="BnF"/>
+                                    <valItem ident="BM_Lyon"/>
+                                    <valItem ident="British_Library"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="role" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="speaker">
+                                        <desc>Utilisé pour les faux
+                                            locuteurs/locuteurs-marionnettes.</desc>
+                                    </valItem>
+                                    <valItem ident="alleged_author">
+                                        <desc>Utilisé pour les auteurs dits présumés.</desc>
+                                    </valItem>
+                                    <valItem ident="dubious_author">
+                                        <desc>Utilisé pour les auteurs douteux (qui se prétendent
+                                            auteurs, ou bien auteurs présumés autrefois, mais remis
+                                            en cause : Mézeray pour le Sieur de Sandricourt).</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                            <attDef ident="calendar" mode="delete"/>
+                            <attDef ident="cert" mode="delete"/>
+                            <attDef ident="change" mode="delete"/>
+                            <attDef ident="datingMethod" mode="delete"/>
+                            <attDef ident="datingPoint" mode="delete"/>
+                            <attDef ident="facs" mode="delete"/>
+                            <attDef ident="from" mode="delete"/>
+                            <attDef ident="from-custom" mode="delete"/>
+                            <attDef ident="from-iso" mode="delete"/>
+                            <attDef ident="key" mode="delete"/>
+                            <attDef ident="n" mode="delete"/>
+                            <attDef ident="notAfter" mode="delete"/>
+                            <attDef ident="notAfter-custom" mode="delete"/>
+                            <attDef ident="notAfter-iso" mode="delete"/>
+                            <attDef ident="notBefore" mode="delete"/>
+                            <attDef ident="notBefore-custom" mode="delete"/>
+                            <attDef ident="notBefore-iso" mode="delete"/>
+                            <attDef ident="nymRef" mode="delete"/>
+                            <attDef ident="period" mode="delete"/>
+                            <attDef ident="rend" mode="delete"/>
+                            <attDef ident="rendition" mode="delete"/>
+                            <attDef ident="resp" mode="delete"/>
+                            <attDef ident="style" mode="delete"/>
+                            <attDef ident="to" mode="delete"/>
+                            <attDef ident="to-custom" mode="delete"/>
+                            <attDef ident="to-iso" mode="delete"/>
+                            <attDef ident="when" mode="delete"/>
+                            <attDef ident="when-custom" mode="delete"/>
+                            <attDef ident="when-iso" mode="delete"/>
+                            <attDef ident="xml:base" mode="delete"/>
+                            <attDef ident="xml:id" mode="delete"/>
+                            <attDef ident="xml:lang" mode="delete"/>
+                            <attDef ident="xml:space" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="persName" mode="change">
+                        <constraintSpec ident="role" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:author/tei:persName">
+                                    <sch:report test="./@role" role="error">Le persName ne peut
+                                        contenir un attribut @role. Il doit être mis sur l'élément
+                                        author.</sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="ref" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:author/tei:persName">
+                                    <sch:report test="./@ref" role="error">Le persName ne peut
+                                        contenir un attribut @ref. Il doit être mis sur l'élément
+                                        author.</sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="role" mode="change" usage="rec"/>
+                            <attDef ident="ref" mode="change" usage="rec"/>
+                            <attDef ident="source" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="orgName" mode="change">
+                        <attList>
+                            <attDef ident="role" mode="delete"/>
+                            <attDef ident="ref" mode="delete"/>
+                            <attDef ident="source" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="publisher" mode="change">
+                        <constraintSpec ident="ref" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:publisher[@ref]">
+                                    <sch:assert
+                                        test="./@ref/starts-with(.,'isni:') or ./@ref/starts-with(.,'viaf:') or ./@ref/starts-with(.,'FRBNF:')"
+                                        role="error">Ajouter un identifiant valide.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="publisherContent" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:bibl/tei:publisher">
+                                    <sch:assert test=".[not(text()[normalize-space()])]"
+                                        role="error">L'auteur doit être renseigné dans un élément
+                                        persName ou orgName.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="publisherContent" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:publisher">
+                                    <sch:assert test="./text() | child::tei:persName" role="error"
+                                        >La balise ne doit pas être auto-fermante. Elle doit
+                                        contenir du texte ou un persName.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="publisherRef" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:publisher/@ref">
+                                    <sch:report test="./matches(., 'isni:[0-9]{7,7}$')"> Le
+                                        référentiel doit être renseigné si l'imprimeur est connu.
+                                        Sinon, le @ref doit être supprimé. </sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="publisherID" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:publisher[@xml:id]">
+                                    <sch:assert
+                                        test=".[@xml:id/ends-with(., '.xml')] and .[@xml:id/starts-with(., 'IL_')]"
+                                        >Le @xml:id doit renvoyer à un fichier .xml qui commence par
+                                        'IL_'.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="xml:id" mode="change" usage="rec"/>
+                            <attDef ident="ref" mode="change" usage="rec"/>
+                            <attDef ident="cert" mode="delete"/>
+                            <attDef ident="change" mode="delete"/>
+                            <attDef ident="facs" mode="delete"/>
+                            <attDef ident="key" mode="delete"/>
+                            <attDef ident="n" mode="delete"/>
+                            <attDef ident="rend" mode="delete"/>
+                            <attDef ident="rendition" mode="delete"/>
+                            <attDef ident="resp" mode="delete"/>
+                            <attDef ident="role" mode="add" usage="opt">
+                                <valList type="closed">
+                                    <valItem ident="dubious">
+                                        <desc>Utilisé pour les faux noms d'imprimeur.</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                            <attDef ident="style" mode="delete"/>
+                            <attDef ident="xml:base" mode="delete"/>
+                            <attDef ident="xml:id" mode="delete"/>
+                            <attDef ident="xml:lang" mode="delete"/>
+                            <attDef ident="xml:space" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="forename" mode="change">
+                        <attList>
+                            <attDef ident="ref" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="surname" mode="change">
+                        <attList>
+                            <attDef ident="ref" mode="delete"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="addName" mode="change">
+                        <constraintSpec scheme="schematron" ident="addNameParent">
+                            <constraint>
+                                <sch:rule context="tei:addName">
+                                    <sch:assert test="parent::tei:persName | parent::tei:orgName"
+                                        role="error"> L'élément addName doit être contenu dans une
+                                        balise persName ou orgName.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="ref" mode="delete"/>
+                            <attDef ident="type" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="pseudonyme">
+                                        <desc>Utilisé pour un auteur publiant sous pseudonyme ou un
+                                            faux nom d'imprimeur.</desc>
+                                    </valItem>
+                                    <valItem ident="initiales">
+                                        <desc>Utilisé lorsque l'identité de l'auteur est indiquée
+                                            par ses initiales.</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="pubPlace" mode="change">
+                        <constraintSpec ident="ref" scheme="schematron">
+                            <constraint>
+                                <sch:rule
+                                    context="tei:pubPlace[text()[not(matches(., 'Sans Lieu'))]]">
+                                    <sch:assert test="@ref" role="error">Le geonames du lieu doit
+                                        être renseigné dans un @ref.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="geonames" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:pubPlace/@ref">
+                                    <sch:assert test="./matches(., 'geonames:[0-9]{7,7}$')">le @ref
+                                        doit contenir 'geonames:' suivi de 7 chiffres.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <!-- à adapter selon les lieux de publication -->
+                        <attList>
+                            <attDef ident="ref" mode="change" usage="rec">
+                                <valList mode="add" type="semi">
+                                    <valItem ident="geonames:2759794">
+                                        <desc>Amsterdam</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2643743">
+                                        <desc>Londres</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2800866">
+                                        <desc>Bruxelles</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2988507">
+                                        <desc>Paris</desc>
+                                    </valItem>
+                                    <valItem ident="geonames: 2972191">
+                                        <desc>Tours</desc>
+                                    </valItem>
+                                    <valItem ident="geonames: 2982652">
+                                        <desc>Rouen</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                            <attDef ident="role" mode="change" usage="opt">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="dubious"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="measure" mode="change">
+                        <attList>
+                            <attDef ident="unit" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="page"/>
+                                    <valItem ident="word"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="quantity" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="note" mode="change">
+                        <constraintSpec ident="format" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:note[@type='format']">
+                                    <sch:assert test="string(.)">Le format doit être précisé ou
+                                        renseigné comme inconnu.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="type" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="format"/>
+                                    <valItem ident="BM_identifier"/>
+                                    <valItem ident="edition"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="relatedItem" mode="change">
+                        <constraintSpec ident="identifierMazarine" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:relatedItem[@subtype != 'none']/@subtype">
+                                    <sch:assert test="./matches(., 'BM[0-9]{5,6}$')">L'identifiant
+                                        en 'subtype' doit commencer par 'BM', suivi de 5 ou 6
+                                        chiffres. S'il n'existe pas d'identifiant, renseignez
+                                        'none'.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="subtype" scheme="schematron">
+                            <constraint>
+                                <sch:rule
+                                    context="tei:relatedItem[@target/starts-with(., 'https://mazarinades.bibliotheque-mazarine.fr/ark')]">
+                                    <sch:report test=".[@subtype='none']">Si le @target contient un
+                                        lien vers une notice de la Bibliothèque Mazarine,
+                                        l'identifiant de la notice doit être indiquée dans le
+                                        @subtype. Le @subtype ne peut pas être 'none'.</sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <attList>
+                            <attDef ident="source" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="Mazarine"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="type" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="identifier"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="subtype" mode="change" usage="req">
+                                <desc>Contient l'identifiant attribué par la bibliothèque
+                                    Mazarine.</desc>
+                                <valList mode="add" type="semi">
+                                    <valItem ident="none"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="target" mode="change" usage="req"/>
+                            <attDef ident="cert" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="msDesc" mode="change">
+                        <content>
+                            <elementRef key="msIdentifier"/>
+                            <elementRef key="msContents"/>
+                            <elementRef key="physDesc"/>
+                            <elementRef key="history"/>
+                            <elementRef key="additional"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="msIdentifier" mode="change">
+                        <content>
+                            <elementRef key="settlement"/>
+                            <elementRef key="institution"/>
+                            <elementRef key="repository"/>
+                            <elementRef key="idno"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="settlement" mode="change">
+                        <attList>
+                            <attDef ident="ref" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="geonames:2759794">
+                                        <desc>Amsterdam</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:3031582">
+                                        <desc>Bordeaux</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:5332921">
+                                        <desc>Californie</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:3176959">
+                                        <desc>Florence</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2797656">
+                                        <desc>Gand</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2659994">
+                                        <desc>Lausanne</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2643743">
+                                        <desc>Londres</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2996944">
+                                        <desc>Lyon</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2867714">
+                                        <desc>Munich</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2988507">
+                                        <desc>Paris</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:3067696">
+                                        <desc>Prague</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2761369">
+                                        <desc>Vienne</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:2747373">
+                                        <desc>La Haye</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:3128760">
+                                        <desc>Barcelone</desc>
+                                    </valItem>
+                                    <valItem ident="geonames:3116235">
+                                        <desc>Montserrat (abbaye)</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="idno" mode="change">
+                        <attList>
+                            <attDef ident="type" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="cote"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="history" mode="change">
+                        <content>
+                            <elementRef key="provenance"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="provenance" mode="change">
+                        <content>
+                            <elementRef key="stamp"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="stamp" mode="change">
+                        <constraintSpec ident="stamp" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:stamp/text()">
+                                    <sch:report test="./matches(., 'True/False')" role="error">La
+                                        présence d'une estampille doit être précisée.</sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                    </elementSpec>
+                    <elementSpec ident="additional" mode="change">
+                        <content>
+                            <elementRef key="surrogates"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="surrogates" mode="change">
+                        <content>
+                            <elementRef key="bibl"/>
+                        </content>
+                    </elementSpec>
+
+                    <!-- encodingDesc-->
+                    <elementSpec ident="encodingDesc" mode="change">
+                        <content>
+                            <elementRef key="projectDesc"/>
+                            <elementRef key="editorialDecl"/>
+                        </content>
+                    </elementSpec>
+
+                    <!-- profileDesc-->
+                    <elementSpec ident="profileDesc" mode="change">
+                        <content>
+                            <elementRef key="langUsage"/>
+                            <elementRef key="abstract"/>
+                            <elementRef key="textClass"/>
+                            <elementRef key="settingDesc" minOccurs="0" maxOccurs="1"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="language" mode="change">
+                        <attList>
+                            <attDef ident="ident" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="fra"/>
+                                    <valItem ident="lat"/>
+                                    <valItem ident="oci"/>
+                                    <valItem ident="ita"/>
+                                    <valItem ident="ger"/>
+                                    <valItem ident="nld"/>
+                                    <valItem ident="other"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="abstract" mode="change">
+                        <content>
+                            <elementRef key="p" minOccurs="0" maxOccurs="unbounded"/>
+                        </content>
+                        <constraintSpec ident="pnotes" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:abstract/tei:p">
+                                    <sch:assert test="@source">La source de l'information doit être
+                                        précisée. </sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                    </elementSpec>
+                    <elementSpec ident="textClass" mode="change">
+                        <content>
+                            <elementRef key="keywords"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="keywords" mode="change">
+                        <content>
+                            <elementRef key="term" maxOccurs="unbounded"/>
+                        </content>
+                        <constraintSpec ident="termform" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:keywords">
+                                    <sch:assert test="count(./tei:term[@type='form'])=1">Un élément
+                                        term avec un attribut @type="form" doit être
+                                        ajouté.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="termhandwritten" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:keywords">
+                                    <sch:assert test="count(./tei:term[@type='handwritten_note'])=1"
+                                        >Un élément term avec un attribut @type="handwritten_note"
+                                        doit être ajouté.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="termtable" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:keywords">
+                                    <sch:assert test="count(./tei:term[@type='table_of_content'])=1"
+                                        >Un élément term avec un attribut @type="table_of_content"
+                                        doit être ajouté.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                        <constraintSpec ident="termillustration" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:keywords">
+                                    <sch:assert test="count(./tei:term[@type='illustration'])=1">Un
+                                        élément term avec un attribut @type="illustration" doit être
+                                        ajouté.</sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                    </elementSpec>
+                    <elementSpec ident="term" mode="change">
+                        <attList>
+                            <attDef ident="type" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="form"/>
+                                    <valItem ident="genre"/>
+                                    <valItem ident="subgenre"/>
+                                    <valItem ident="subject"/>
+                                    <valItem ident="handwritten_note"/>
+                                    <valItem ident="table_of_content"/>
+                                    <valItem ident="illustration"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="subtype" mode="change">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="yes"/>
+                                    <valItem ident="no"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="settingDesc" mode="change">
+                        <content>
+                            <elementRef key="setting" minOccurs="1" maxOccurs="unbounded"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="setting" mode="change">
+                        <content>
+                            <elementRef key="p" minOccurs="1" maxOccurs="1"/>
+                            <elementRef key="date" minOccurs="1" maxOccurs="1"/>
+                        </content>
+                        <attList>
+                            <attDef ident="source" mode="change" usage="req"/>
+                            <attDef ident="xml:id" mode="change" usage="req"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="revisionDesc" mode="change">
+                        <content>
+                            <elementRef key="change" minOccurs="0" maxOccurs="unbounded"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="change" mode="change">
+                        <attList>
+                            <attDef ident="status" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="not_corrected"/>
+                                    <valItem ident="corrected"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="when" mode="change" usage="rec"/>
+                            <attDef ident="who" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="AB">
+                                        <desc>Alexandre Bartz</desc>
+                                    </valItem>
+                                    <valItem ident="GL">
+                                        <desc>Gaël Lejeune</desc>
+                                    </valItem>
+                                    <valItem ident="KA">
+                                        <desc>Karine Abiven</desc>
+                                    </valItem>
+                                    <valItem ident="MF">
+                                        <desc>Margaux Faure</desc>
+                                    </valItem>
+                                    <valItem ident="ZC">
+                                        <desc>Zoé Cappe</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+
+                    <!-- Règles concernant le texte -->
+                    <elementSpec ident="pb" mode="change">
+                        <!-- pour faire de la numérotation continue dans les numéros de page, qui commence bien à 1 -->
+                        <!-- à ajouter plus tard -->
+                        <!--<constraintSpec scheme="schematron" ident="pbnum">
+                            <constraint>
+                                <sch:rule context="tei:body//tei:pb[position() != 1]">
+                                    <sch:assert
+                                        test="number(@n) = number(preceding-sibling::tei:pb[1]/@n) + 1"> La numérotation doit être continue. </sch:assert>
+                                </sch:rule>
+                                <sch:rule context="tei:body//tei:pb[position() = 1]">
+                                    <sch:assert
+                                        test="number(@n) = 1">La numérotation doit débuter à 1. </sch:assert>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>-->
+                        <attList>
+                            <attDef ident="n" mode="change" usage="req"/>
+                            <attDef ident="facs" mode="change" usage="rec"/>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="figure" mode="change">
+                        <attList>
+                            <attDef ident="type" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="decoration">
+                                        <desc>Marques d'imprimeurs.</desc>
+                                    </valItem>
+                                    <valItem ident="illustration">
+                                        <desc>Illustrations (portraits par exemple).</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="p" mode="change">
+                        <content>
+                            <alternate minOccurs="1" maxOccurs="unbounded">
+                                <elementRef key="lb" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="l" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="unclear" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="gap" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="title" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="hi" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="imprimatur" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="figure" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="pb" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="choice" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="cb" minOccurs="0" maxOccurs="0"/>
+                                <elementRef key="corr" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="sic" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="fw" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="lg" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="note" minOccurs="0" maxOccurs="unbounded"/>
+                                <elementRef key="ref" minOccurs="0" maxOccurs="unbounded"/>
+                                <textNode/>
+                            </alternate>
+                        </content>
+
+                        <attList>
+                            <attDef ident="source" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="Carrier"/>
+                                    <valItem ident="Moreau"/>
+                                    <valItem ident="Mazarine"/>
+                                    <valItem ident="Artois"/>
+                                    <valItem ident="Labadie"/>
+                                    <valItem ident="Socard"/>
+                                    <valItem ident="Antonomaz"/>
+                                    <valItem ident="BnF"/>
+                                    <valItem ident="BM_Lyon"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="l" mode="change">
+                        <constraintSpec ident="form" scheme="schematron">
+                            <constraint>
+                                <sch:rule context="tei:body/tei:p/tei:l">
+                                    <sch:report
+                                        test="ancestor::tei:TEI//tei:term[@type='form']/text()[matches(., '^prose$')]"
+                                        > Un texte en prose ne contient pas de balise l.
+                                    </sch:report>
+                                </sch:rule>
+                            </constraint>
+                        </constraintSpec>
+                    </elementSpec>
+                    <elementSpec ident="fw" mode="change">
+                        <attList>
+                            <attDef ident="place" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="right"/>
+                                    <valItem ident="left"/>
+                                    <valItem ident="center"/>
+                                    <valItem ident="top-left"/>
+                                    <valItem ident="top-right"/>
+                                    <valItem ident="top-center"/>
+                                    <valItem ident="bot-left"/>
+                                    <valItem ident="bot-right"/>
+                                    <valItem ident="bot-center"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="type" mode="change" usage="rec">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="pageNum"/>
+                                    <valItem ident="catch"/>
+                                    <valItem ident="sig"/>
+                                    <valItem ident="head"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="lb" mode="change">
+                        <attList>
+                            <attDef ident="break" mode="change">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="yes"/>
+                                    <valItem ident="no"/>
+                                </valList>
+                            </attDef>
+                            <attDef ident="rend" mode="change">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="¬"/>
+                                    <valItem ident="indent"/>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="choice" mode="change">
+                        <content>
+                            <elementRef key="sic"/>
+                            <elementRef key="corr"/>
+                        </content>
+                    </elementSpec>
+                    <elementSpec ident="foreign" mode="change">
+                        <attList>
+                            <attDef ident="xml:lang" mode="change" usage="req">
+                                <valList mode="add" type="closed">
+                                    <valItem ident="la">
+                                        <desc>Latin</desc>
+                                    </valItem>
+                                </valList>
+                            </attDef>
+                        </attList>
+                    </elementSpec>
+                    <elementSpec ident="imprimatur" mode="change" module="textstructure">
+                        <classes mode="replace">
+                            <memberOf key="model.pLike" mode="add"/>
+                            <memberOf key="att.global"/>
+                        </classes>
+                    </elementSpec>
+                </schemaSpec>
+            </div1>
+        </body>
+    </text>
+</TEI>

@@ -1,0 +1,227 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+        <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico"/>
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-16.png" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-24.png" sizes="24x24"/>
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-32.png" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-64.png" sizes="64x64"/>
+        
+        
+        <title data-template="config:app-title"/>
+        <meta name="description" content="Default single text layout"/>
+        <meta name="pb-template" content="view.html"/>
+        
+        <link rel="stylesheet" type="text/css" href="resources/fonts/font.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald&amp;display=swap"/>
+        <link rel="stylesheet" href="resources/css/theme.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
+        
+        <script src="https://unpkg.com/mirador@latest/dist/mirador.min.js"/>
+        <script type="module" src="pb-components-bundle.js" data-template="pages:load-components"/> 
+        
+        <style>
+           
+
+            .content-body {
+                position: relative;
+                width: 80%;
+                margin-left: auto;
+                margin: auto;
+            }
+
+            .content-body pb-navigation {
+                position: fixed;
+                bottom: 45%;
+                --paper-fab-background: #35424b;
+                color: white;
+            }
+
+            .content-body pb-navigation[direction=backward] {
+                left: 20px;
+            }
+
+            .content-body pb-navigation[direction=forward] {
+                right: 20px;
+            }
+
+           
+            
+            .mirador {
+                
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 15px;
+                
+            }
+            
+            .mirador34{
+                height:32px;
+            }
+            
+            .metadata{
+                text-align:center;
+                padding: 15px;
+                position: relative;
+                
+            }
+            
+            table {
+                width: 100%;
+                margin:auto;
+            }
+            
+            
+            pb-view {
+                margin:auto;
+            }
+            
+            @media (min-width: 769px) {
+                pb-view, pb-view-annotate {
+                max-width: fit-content;
+                }
+            }
+            
+            .button{
+                margin-left: 73%;
+                position: relative;
+                top: -17px;
+            }
+            
+            paper-button{
+                font-size: smaller;
+            }
+            
+            a{
+                text-decoration: none;
+                color:black;
+            }
+            
+        </style>
+    </head>
+    
+    <body>
+        <pb-page data-template="pages:pb-page" unresolved="unresolved">
+            <pb-document id="document1" data-template="pages:pb-document"/>
+            <app-drawer-layout force-narrow="force-narrow">
+                <app-drawer data-template="lib:include" data-template-path="templates/drawer.html"/>
+                <app-header-layout>
+                    <app-header slot="header" reveals="reveals" fixed="fixed" effects="waterfall">
+                        <app-toolbar data-template="lib:include" data-template-path="templates/menu.html"/>
+                        
+                    </app-header>
+                    
+                    <pb-drawer toggle="tocToggle" class="toc" emit="toc" subscribe="transcription">
+                        <div class="drawer-content">
+                            <h3>
+                                <pb-i18n key="document.contents">Contents</pb-i18n>
+                            </h3>
+                            <pb-load id="toc" url="api/document/{doc}/contents?target=transcription&amp;icons=true" expand="expand" src="document1" subscribe="toc" load-once="load-once">
+                                <pb-i18n key="dialogs.loading">Loading</pb-i18n>
+                            </pb-load>
+                        </div>
+                    </pb-drawer>
+                    
+                    <main class="content-body">
+                        
+                        <pb-view id="title-view1" src="document1" xpath="//teiHeader/fileDesc/titleStmt/title[@type='main']" view="single">
+                            <pb-param name="header" value="metadata"/>
+                        </pb-view>
+                        <div class="button">
+                            <a href="#1">
+                                <paper-button raised="">Métadonnées</paper-button>
+                            </a>
+                            <pb-download src="document1" title="Download text">
+                                <paper-button raised="">Accéder au texte (OCR)</paper-button>
+                            </pb-download>
+                            
+                            
+                        </div>
+                        
+                        <pb-view id="manif" src="document1" xpath="//teiHeader" view="single">
+                            <pb-param name="mode" value="manifest"/>
+                        </pb-view>
+                        <pb-view id="view1" src="document1" view="single" before-update-event="before-javascript-update" subscribe="manifest" emit="manifest"/>
+                        
+                        <div id="my-mirador" class="mirador"/>
+                        
+                        <div class="metadata" id="1">
+                            <pb-view id="title-view1" src="document1" xpath="//teiHeader" view="single">
+                                <pb-param name="mode" value="metadata"/>
+                            </pb-view>
+                        </div>
+                        <div class="splash"/>
+                    </main>
+                    
+                </app-header-layout>
+            </app-drawer-layout>
+        </pb-page>
+        
+        
+    </body>
+    <script type="text/javascript">
+             window.addEventListener('DOMContentLoaded', () =&gt; {
+                pbEvents.subscribe('before-javascript-update', 'manifest', (ev) =&gt; {
+            
+                    // on récupère le contenu de l'attribut href qui contient le lien du manifest et on le stocke dans une variable
+                    let manifest = manif.shadowRoot.getElementById('manifeste').attributes['href'].value
+                    
+
+                    var mirador = Mirador.viewer({
+                    "id": "my-mirador",
+                    language: 'fr',
+                    "manifests": {
+                        manifest // on injecte la variable là où il faut préciser le lien du manifest
+                    },
+                    
+                    window: { 
+                        //global window defaults
+                        allowClose: false, // Configure if windows can be closed or not
+                        allowFullscreen: true, // Configure to show a "fullscreen" button in the WindowTopBar
+                        allowMaximize: false, // Configure if windows can be maximized or not
+                        allowTopMenuButton: true, // Configure if window view and thumbnail display menu are visible or not
+                        allowWindowSideBar: true, // Configure if side bar menu is visible or not
+                        defaultView: 'single',  // Configure which viewing mode (e.g. single, book, gallery) for windows to be opened in
+                        forceDrawAnnotations: false,
+                        hideWindowTitle: true, // Configure if the window title is shown in the window title bar or not
+                        switchCanvasOnSearch: true, // Configure if Mirador should automatically switch to the canvas of the first search result
+                        
+                        views: [
+                        { key: 'single'},
+                        { key: 'scroll'},
+                        { key: 'gallery' },
+                        ],
+                        elastic: {
+                        height: 0,
+                        width: 0
+                        }
+                    },
+                    
+              
+                    "windows": [
+                    {
+                    defaultView: 'single',
+                    "loadedManifest": manifest,
+                    "canvasIndex": 0,
+                    thumbnailNavigationPosition: 'far-bottom',
+                    } 
+                    ],
+                    thumbnailNavigation: {
+                    defaultPosition: 'off', // Which position for the thumbnail navigation to be be displayed. Other possible values are "far-bottom" or "far-right"
+                        displaySettings: true, // Display the settings for this in WindowTopMenu
+                    height: 110, // height of entire ThumbnailNavigation area when position is "far-bottom"
+                   
+                    },
+            
+   
+                });
+              
+                });
+             });
+            </script>
+</html>
